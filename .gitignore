@@ -1,0 +1,50 @@
+# Local environments and interpreter output
+.venv/
+venv/
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.coverage
+htmlcov/
+node_modules/
+# Credentials, sessions, local app data and private inputs
+.env
+.env.*
+!.env.example
+.codex/
+.aws/
+*.pem
+*.key
+token.txt
+credentials*.json
+auth*.json
+**/.runtime/
+.runtime/
+*.awb
+workspace-cache.json
+assets/
+artifacts/
+jobs/
+uploads/
+downloads/
+private/
+backups/
+*-backup/
+*.bak
+*.log
+*.pid
+# Generated reports and distribution archives
+tests/verification.json
+MANIFEST.sha256.json
+dist/
+build/
+*.zip
+*.tar.gz
+# OS and editor local state
+.DS_Store
+Thumbs.db
+.idea/
+.vscode/
+
+# Regenerated test-only video, never published
+tests/fixtures/*.mp4

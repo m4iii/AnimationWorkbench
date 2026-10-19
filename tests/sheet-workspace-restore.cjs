@@ -1,0 +1,11 @@
+const assert=require('node:assert/strict'),fs=require('node:fs'),path=require('node:path');const M=require('../frontend/motion-input.js');
+const settings={cols:15,rows:5,count:75,'offset-x':0,'offset-y':0,'cell-w':113,'cell-h':180,'gap-x':0,'gap-y':0};
+const frames=Array.from({length:75},(_,i)=>({id:'f'+i,kind:'sheet',crop:{x:i%15*113,y:Math.floor(i/15)*180,width:113,height:180}}));
+assert.deepEqual(M.inferSheetSettings(frames),settings,'legacy 75-frame workspace recovers original grid from crop locators');assert.equal(M.inferSheetSettings([]),null);
+const fields=Object.fromEntries(Object.entries(settings).map(([k,v])=>[k,{value:String(v)}]));fields['sequence-fps']={value:10};
+const ed=Object.create(M.Editor.prototype);Object.assign(ed,{kind:'sheet',frames,sources:[],q:k=>fields[k],timelineFps:10,frameLayout:'row'});
+const saved=ed.metadata();assert.deepEqual(saved.sheetSettings,settings);const clean=M.cleanMetadata(JSON.parse(JSON.stringify(saved)));assert.deepEqual(clean.sheetSettings,settings);assert.equal(clean.frames.length,75);
+for(const k of Object.keys(settings))fields[k].value='0';ed.restoreSheetSettings(clean.sheetSettings);assert.deepEqual(ed.sheetSettings(),settings);
+assert.equal(M.cleanSheetSettings({...settings,cols:-1}),null);assert.equal(M.cleanSheetSettings({...settings,'offset-x':Infinity}),null);
+const app=fs.readFileSync(path.join(__dirname,'../frontend/unified-app.js'),'utf8');assert.match(app,/editor.sheet=image;editor.restoreSheetSettings\(motion.sheetSettings\|\|MotionInput.inferSheetSettings\(motion.frames\)\);editor.previewGrid\(\)/,'restore source image, grid settings and redraw canvas after image decode');
+console.log(JSON.stringify({passed:true,coverage:['75_frame_grid_metadata_roundtrip','restore_all_grid_controls','legacy_crop_inference','invalid_settings_rejected','source_canvas_redraw_after_decode']}));

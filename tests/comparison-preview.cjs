@@ -1,0 +1,12 @@
+const assert=require('node:assert/strict'),fs=require('node:fs'),vm=require('node:vm');
+const source=fs.readFileSync(require('node:path').join(__dirname,'../frontend/unified-app.js'),'utf8');
+const start=source.indexOf(' function previewFrame(){'),end=source.indexOf(' function primary(){',start);
+const context={editor:{epoch:1,selected:'b',frames:[{id:'a',url:'a'},{id:'b',url:'b'}]},lastPreviewId:null,lastPreviewEpoch:null};
+context.primary=()=>context.editor.frames.find(f=>f.id===context.editor.selected)||null;
+vm.createContext(context);vm.runInContext(source.slice(start,end),context);
+assert.equal(context.previewFrame().id,'b');
+context.editor.selected=null;assert.equal(context.previewFrame().id,'b','deselect keeps viewed frame');
+context.editor.frames=context.editor.frames.filter(f=>f.id!=='b');assert.equal(context.previewFrame().id,'a','deleted frame cannot keep revoked URL');
+context.editor.epoch++;context.editor.frames=[{id:'new',url:'new'}];assert.equal(context.previewFrame().id,'new','new source discards old preview identity');
+context.editor.frames=[];assert.equal(context.previewFrame(),null);
+console.log('Preview identity regression tests passed');

@@ -1,0 +1,386 @@
+[
+  {
+    "id": "candidate.import",
+    "label": "导入当前帧候选",
+    "group": "动作工作区",
+    "ui": "真实读取本地候选图片并关联打开文件选择器时的帧ID，未上传、不代表生图产物。",
+    "backend": "前端界面行为；无后端调用。",
+    "api": "前端功能"
+  },
+  {
+    "id": "candidate.select",
+    "label": "采用候选",
+    "group": "生图",
+    "ui": "在当前帧的候选列表标记采用，仅本页保存，不部署素材。",
+    "backend": "保存选定产物版本并标记相关下游结果失效。",
+    "api": "POST /api/v1/attempts/{id}/selections"
+  },
+  {
+    "id": "config.export",
+    "label": "导出配置",
+    "group": "任务",
+    "ui": "实际下载当前配置 JSON；不含上传文件内容。",
+    "backend": "可由前端完成；后续可包含服务端配置版本。",
+    "api": "前端功能"
+  },
+  {
+    "id": "config.import",
+    "label": "载入配置",
+    "group": "任务",
+    "ui": "选择本地 JSON，验证基本字段后恢复界面配置。",
+    "backend": "校验并登记配置修订。",
+    "api": "PUT /api/v1/attempts/{id}/config"
+  },
+  {
+    "id": "demo.reset",
+    "label": "重置演示",
+    "group": "设置",
+    "ui": "经确认重置页面演示与本浏览器草稿；不删除磁盘文件。",
+    "backend": "无，正式版另行定义。",
+    "api": "前端功能"
+  },
+  {
+    "id": "export.request",
+    "label": "导出动画产物",
+    "group": "审核",
+    "ui": "选择格式并记录模拟导出请求，不生成新的动画或图集。",
+    "backend": "运行导出阶段，生成 MP4、PNG、图集或离线 HTML。",
+    "api": "POST /api/v1/attempts/{id}/exports"
+  },
+  {
+    "id": "export.simulate",
+    "label": "记录动画导出请求",
+    "group": "动作工作区",
+    "ui": "记录格式与帧ID的模拟请求，不生成动画文件。",
+    "backend": "前端界面行为；无后端调用。",
+    "api": "前端功能"
+  },
+  {
+    "id": "feedback.export",
+    "label": "导出评审意见",
+    "group": "评审",
+    "ui": "实际下载功能列表和修改意见 JSON，便于后续调整界面。",
+    "backend": "无。",
+    "api": "前端功能"
+  },
+  {
+    "id": "functions.open",
+    "label": "功能对照",
+    "group": "评审",
+    "ui": "显示功能 ID、当前行为、未来后端操作及接口。",
+    "backend": "无。",
+    "api": "前端功能"
+  },
+  {
+    "id": "generation.submit",
+    "label": "提交生图请求",
+    "group": "生图",
+    "ui": "提交选中帧与各自提示词，后端提取原帧并按并行设置调用 Codex；真实产物回到各帧候选列表。",
+    "backend": "先登记原素材取得assetId，再按时间戳或图集裁切区域提取原尺寸图片，结合提示词和参考原图调用本地Codex。",
+    "api": "POST /generation-jobs"
+  },
+  {
+    "id": "logs.open",
+    "label": "打开请求与日志",
+    "group": "动作工作区",
+    "ui": "同一工作区弹窗查看最近的本地动作与模拟请求。",
+    "backend": "前端界面行为；无后端调用。",
+    "api": "前端功能"
+  },
+  {
+    "id": "motion.batch_add",
+    "label": "时间轴批量添加帧",
+    "group": "动作参考",
+    "ui": "在顶部时间刻度拖选采样范围（深色区间），切换固定间隔/总帧数后批量添加。范围包含起点、不含终点；帧吸附后仍限制在范围内。自动跳过已有帧和吸附后重合的位置；不再显示停止添加按钮。",
+    "backend": "准确解码时间采样计划并保存帧文件、源时间戳和任务进度；支持取消。",
+    "api": "POST /api/v1/attempts/{id}/frame-jobs"
+  },
+  {
+    "id": "motion.capture",
+    "label": "定位并截帧",
+    "group": "动作参考",
+    "ui": "只生成最长边256px的显示缩略图，保留原尺寸元数据和源文件/时间定位；同一源帧不重复添加。",
+    "backend": "源文件登记后，按帧时间从原视频提取原尺寸图片供生图；缩略图只用于界面。",
+    "api": "POST /api/v1/attempts/{id}/frame-jobs"
+  },
+  {
+    "id": "motion.clear_selection",
+    "label": "清空选择",
+    "group": "动作参考",
+    "ui": "与全选相反：仅取消全部选中状态，不删除帧，不清除视频，不修改重绘标记和提示词。删除帧只通过删除所选执行。",
+    "backend": "纯前端选择状态。",
+    "api": "前端功能"
+  },
+  {
+    "id": "motion.import_frames",
+    "label": "导入多张动画帧",
+    "group": "动作参考",
+    "ui": "导入全部原帧并保留顺序；按原尺寸RGBA像素全局比较，相同画面默认仅选中首帧，重复帧置灰且可手动改选；最长边256px缩略图仅用于显示。",
+    "backend": "归档所有源帧和顺序；生成仅使用当前选中帧，播放仍包含全部原帧。",
+    "api": "POST /api/v1/attempts/{id}/inputs"
+  },
+  {
+    "id": "motion.import_sheet",
+    "label": "导入连续图 / 图集",
+    "group": "动作参考",
+    "ui": "读取连续帧图，设置行列、帧数、格尺寸、起点与间距，预览网格。",
+    "backend": "登记图集和切分参数。",
+    "api": "POST /api/v1/attempts/{id}/inputs"
+  },
+  {
+    "id": "motion.import_video",
+    "label": "导入动作视频",
+    "group": "动作参考",
+    "ui": "本地选择视频并播放，不上传；是否支持取决于浏览器解码器。",
+    "backend": "原件归档，探测帧率、时长与时间戳。",
+    "api": "POST /api/v1/attempts/{id}/inputs"
+  },
+  {
+    "id": "motion.preview_sequence",
+    "label": "预览帧序列",
+    "group": "动作参考",
+    "ui": "按用户设置的1–60fps循环播放导入或切分的帧；仅预览，不定义最终输出节奏。",
+    "backend": "无。",
+    "api": "前端功能"
+  },
+  {
+    "id": "motion.remove",
+    "label": "移除选帧",
+    "group": "动作参考",
+    "ui": "上方仅保留一个删除所选按钮，作用于当前选择集合；帧卡片不再提供单独移除按钮。原始素材不变。",
+    "backend": "解除选帧引用，保留原件。",
+    "api": "PUT /api/v1/attempts/{id}/motion-input"
+  },
+  {
+    "id": "motion.reorder",
+    "label": "拖动帧排序",
+    "group": "动作参考",
+    "ui": "图片序列/图集帧进入调整图片顺序模式后拖动排序；默认拖动用于框选。视频帧按源时间自动排序。",
+    "backend": "保存有序帧ID列表，不删除源视频的重复停留时长。",
+    "api": "PUT /api/v1/attempts/{id}/motion-input"
+  },
+  {
+    "id": "motion.retime",
+    "label": "拖动采样点位置",
+    "group": "动作参考",
+    "ui": "拖动时实时预览；MP4/MOV按读取到的帧时间吸附，方向键跳到相邻帧。WebM声明帧率或手动模式按帧格吸附。 目标帧已被其他采样占用时保持原位置，不允许重叠。",
+    "backend": "更新采样时间和对应帧文件，标记相关下游失效。",
+    "api": "PUT /api/v1/attempts/{id}/motion-input"
+  },
+  {
+    "id": "motion.split_sheet",
+    "label": "按网格切分",
+    "group": "动作参考",
+    "ui": "按原图坐标切分显示缩略图，记录图集源ID和原尺寸裁切区域；每个格子不再保存原尺寸PNG。",
+    "backend": "将切分帧写入工作目录并保存源区域。",
+    "api": "POST /api/v1/attempts/{id}/frame-jobs"
+  },
+  {
+    "id": "pose.mark",
+    "label": "标记需要重绘的帧",
+    "group": "关键姿势",
+    "ui": "时间轴帧带或右侧直接切换重绘属性；支持对当前多选批量标记/取消。选中状态和重绘属性独立。",
+    "backend": "保存关键姿势计划；改变画稿数量不删除源运动采样。",
+    "api": "PUT /api/v1/attempts/{id}/annotations"
+  },
+  {
+    "id": "prompt.copy",
+    "label": "复制提示词",
+    "group": "提示词",
+    "ui": "复制编辑区内容；浏览器拒绝剪贴板时选中文本供手动复制。",
+    "backend": "无。",
+    "api": "前端功能"
+  },
+  {
+    "id": "prompt.optimize",
+    "label": "优化提示词",
+    "group": "提示词",
+    "ui": "连接本机后端，提交当前提示词、原帧及参考图，返回后检查编辑状态并回填，支持撤销。",
+    "backend": "本地 Codex 优化当前提示词，保持角色、画风与动作要求；结果关联当前帧或项目默认并保存版本。",
+    "api": "POST /prompt-jobs"
+  },
+  {
+    "id": "prompt.save_default",
+    "label": "设为项目默认提示词",
+    "group": "动作工作区",
+    "ui": "仅当前帧提示词非空且不同于项目默认时显示；未选帧时直接编辑项目默认，不显示此按钮。",
+    "backend": "前端界面行为；无后端调用。",
+    "api": "前端功能"
+  },
+  {
+    "id": "prompt.use_default",
+    "label": "使用项目默认提示词",
+    "group": "动作工作区",
+    "ui": "仅当前帧有独立提示词时显示，清除该帧覆盖并恢复继承项目默认。",
+    "backend": "前端界面行为；无后端调用。",
+    "api": "前端功能"
+  },
+  {
+    "id": "reference.choose",
+    "label": "选择参考素材",
+    "group": "输入",
+    "ui": "选择图片或视频，在当前页面内预览；不上传、不归档。",
+    "backend": "原件归档、校验和工作副本登记；保留 character/style/motion/weapon 角色。",
+    "api": "POST /api/v1/attempts/{id}/inputs"
+  },
+  {
+    "id": "reference.clear",
+    "label": "清除参考选择",
+    "group": "输入",
+    "ui": "清除当前角色的页面选择，不删除任何本地文件。",
+    "backend": "解除配置引用，保留原件和历史。",
+    "api": "PUT /api/v1/attempts/{id}/config"
+  },
+  {
+    "id": "run.all",
+    "label": "完整执行",
+    "group": "执行",
+    "ui": "模拟六个界面环节的状态变化，完成后明确说明没有新产物。",
+    "backend": "创建冻结配置的 Run，调度完整流程或审核点流程。",
+    "api": "POST /api/v1/attempts/{id}/runs"
+  },
+  {
+    "id": "run.continue",
+    "label": "继续演示",
+    "group": "执行",
+    "ui": "从暂停或终止位置继续模拟；审核等待需明确确认。",
+    "backend": "检查点继续，与 Codex resume 分开处理。",
+    "api": "POST /api/v1/runs/{id}/continue"
+  },
+  {
+    "id": "run.open",
+    "label": "流程演示控制",
+    "group": "动作工作区",
+    "ui": "弹窗操作模拟执行、继续与停止，不替用户选帧，不产生图片。",
+    "backend": "前端界面行为；无后端调用。",
+    "api": "前端功能"
+  },
+  {
+    "id": "run.stop_after",
+    "label": "本阶段结束后停止",
+    "group": "执行",
+    "ui": "完成当前环节剩余模拟项后暂停；可再次点击撤销。",
+    "backend": "完成当前阶段已计划的任务并保存检查点，不进入下阶段。",
+    "api": "POST /api/v1/runs/{id}/stop {mode: after_stage}"
+  },
+  {
+    "id": "run.stop_now",
+    "label": "立即终止",
+    "group": "执行",
+    "ui": "取消计时器，停止模拟队列，保留已完成环节。",
+    "backend": "禁止后续调度，停止受管进程树，确认退出后记录终止。",
+    "api": "POST /api/v1/runs/{id}/stop {mode: immediate}"
+  },
+  {
+    "id": "task.save",
+    "label": "保存工作区",
+    "group": "任务",
+    "ui": "输入名称、选择目录，将配置与素材保存为独立工作区；单份临时缓存自动更新，互不覆盖。",
+    "backend": "保存配置版本并计算下游失效范围。",
+    "api": "POST /workspaces/save"
+  },
+  {
+    "id": "viewer.result",
+    "label": "查看候选结果",
+    "group": "动作工作区",
+    "ui": "在中央查看当前帧的候选图；没有候选时明确为空。",
+    "backend": "前端界面行为；无后端调用。",
+    "api": "前端功能"
+  },
+  {
+    "id": "viewer.source",
+    "label": "查看源画面",
+    "group": "动作工作区",
+    "ui": "在中央显示源视频或当前帧图，保留当前选择。",
+    "backend": "前端界面行为；无后端调用。",
+    "api": "前端功能"
+  },
+  {
+    "id": "workspace.assets",
+    "label": "显示素材栏",
+    "group": "动作工作区",
+    "ui": "窄屏切换素材侧栏，不改变选中帧。",
+    "backend": "前端界面行为；无后端调用。",
+    "api": "前端功能"
+  },
+  {
+    "id": "workspace.inspector",
+    "label": "显示属性栏",
+    "group": "动作工作区",
+    "ui": "窄屏切换属性与提示词侧栏，不改变选中帧。",
+    "backend": "前端界面行为；无后端调用。",
+    "api": "前端功能"
+  },
+  {
+    "id": "workspace.open",
+    "label": "打开动作工作区",
+    "group": "动作工作区",
+    "ui": "一个工作区组织素材、当前预览、属性提示词、时间轴；无六步分页。",
+    "backend": "前端界面行为；无后端调用。",
+    "api": "前端功能"
+  },
+  {
+    "id": "motion.select",
+    "label": "选择与多选帧",
+    "group": "动作参考",
+    "ui": "时间轴上下区域统一拖选时间范围；下方缩略图区支持矩形框选；Ctrl/Shift追加，选中结果同步。时间轴顶部刻度拖选同时设置采样范围并选择已有帧；单击定位、帧点拖动改时间；Esc取消框选恢复原选择。",
+    "backend": "前端状态；生成请求携带明确帧ID集合。",
+    "api": "前端功能"
+  },
+  {
+    "id": "motion.frame_rate",
+    "label": "设置时间轴帧率",
+    "group": "动作参考",
+    "ui": "导入视频自动识别帧率，可手动覆盖；MP4/MOV按实际显示帧时间吸附，WebM使用文件DefaultDuration声明帧率。识别失败时提示手动填写。",
+    "backend": "未来解析源视频帧率/时间戳，CFR按真实帧格吸附，VFR按源PTS定位。",
+    "api": "PUT /api/v1/attempts/{id}/motion-input"
+  },
+  {
+    "id": "motion.detect_frame_rate",
+    "label": "自动识别视频帧率",
+    "group": "动作参考",
+    "ui": "仅读取本地视频元数据；支持普通MP4/MOV视频时间表与WebM视频DefaultDuration。读取结果显示自动/手动/未识别状态。可变帧率MP4按实际帧时间吸附，FPS栏显示平均值。自动结果不会覆盖较晚的手动输入。",
+    "backend": "前端可完成常用格式识别；分片MP4、复杂编辑及缺少元数据等情况后续由媒体处理模块补齐。",
+    "api": "前端功能"
+  },
+  {
+    "id": "motion.sort_mode",
+    "label": "切换图片排序模式",
+    "group": "动作参考",
+    "ui": "图片帧列表默认框选；主动点击调整图片顺序后才启用拖拽排序，完成排序返回框选。视频不提供该模式。",
+    "backend": "前端交互模式，不调用后端。",
+    "api": "前端功能"
+  },
+  {
+    "id": "motion.frame_layout",
+    "label": "单行 / 多行显示",
+    "group": "动作参考",
+    "ui": "单行模式横向滚动；多行模式按实际行数自动展开，不设内部高度上限。超出下方面板时使用面板统一滚动，框选边缘滚动跟随外层面板。切换保持帧数据和选择。",
+    "backend": "纯前端显示设置。",
+    "api": "前端功能"
+  },
+  {
+    "id": "motion.step_preview",
+    "label": "上一帧 / 下一帧",
+    "group": "动作参考",
+    "ui": "在添加帧时间旁逐帧定位源视频，同步播放指针和时间输入框；使用识别出的相邻显示帧时间，手动模式按帧率步进。不增删采样，不移动已有帧。首尾自动禁用。",
+    "backend": "本地视频预览；不调用后端。",
+    "api": "前端功能"
+  },
+  {
+    "id": "motion.batch_range",
+    "label": "拖选采样范围 / 全片范围",
+    "group": "动作参考",
+    "ui": "顶部刻度拖出深色采样区间，支持反向拖动、帧吸附和Esc恢复。全片范围按钮位于时间轴范围提示旁，恢复整段源视频。同时选中范围内已有视频帧（含起点、不含终点），同步缩略图；Ctrl/Shift追加，Esc恢复范围与选择。全片范围同时选中整段视频的已有帧。不增删或重排已有帧。",
+    "backend": "保存采样起止时间，供批量抽帧使用。",
+    "api": "PUT /api/v1/attempts/{id}/motion-input"
+  },
+  {
+    "id": "motion.batch_options",
+    "label": "展开批量添加",
+    "group": "动作参考",
+    "ui": "批量添加入口紧接在此添加帧，点击展开/收起下方参数；展开不执行采样。",
+    "backend": "纯前端界面。",
+    "api": "前端功能"
+  }
+]
