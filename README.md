@@ -125,7 +125,7 @@ backend/.runtime/
 
 ## 6. 开发与验证
 
-在解压目录执行：
+完整开发验证需要 Git 和仓库元数据；请在 Git 克隆目录执行（不是 ZIP 解压目录）：
 
 ```powershell
 .\.venv\Scripts\python.exe scripts/check.py
