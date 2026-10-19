@@ -17,6 +17,20 @@ loopback UI manually; passing unit tests does not prove browser rendering works.
 Do not add credentials, runtime data, private screenshots or artwork without
 redistribution rights.
 
+## Private assets and runtime data
+
+Keep personal media outside the repository. Unicorn Overlord artwork, sprites,
+screenshots, extracted frames and animations must never be uploaded to this
+repository, PRs or release packages. Personal learning use does not establish
+redistribution rights. If a temporary local material directory is unavoidable,
+use ignored `media-assets/`, `materials/` or `test-assets/`; never force-add it.
+Runtime, cache, authentication, uploads and backup data must stay untracked.
+The public-release check rejects tracked material/runtime paths and raster/video
+files; tests generate synthetic video locally. Ignore rules do not untrack files
+already committed. Review `git diff --cached --name-only` before every push. If
+private content was previously published, stop and assess removal with the owner;
+do not silently rewrite history or move a release tag.
+
 ## Single-maintainer pull request flow
 
 1. Start a focused `feat/`, `fix/` or `chore/` branch from current `main`.
