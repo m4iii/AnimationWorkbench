@@ -125,13 +125,10 @@ backend/.runtime/
 
 ## 6. 开发与验证
 
-在解压目录执行：
+完整开发验证需要 Git 和仓库元数据；请在 Git 克隆目录执行（不是 ZIP 解压目录）：
 
 ```powershell
-python build_frontend.py
-python scripts/generate_sample_media.py
-python tests/check_bundle.py
-.\.venv\Scripts\python.exe tests/backend_test.py
+.\.venv\Scripts\python.exe scripts/check.py
 ```
 
 构建只需要 Python 标准库，不依赖外部素材。修改前端源码后重新构建，并刷新浏览器；修改后端代码后等待任务结束再重启服务。测试脚本中的 JavaScript 检查需要安装 Node.js；正常运行工作台不需要 Node.js。
@@ -184,3 +181,12 @@ Linux/macOS 本地启动可用 `python3 -m venv .venv`，随后运行
 悬停时间轴菱形点会显示对应帧缩略图、编号和时间；有像素分组时仅同组临时高亮，其余已选帧暂时降亮。离开后恢复原选择视觉，选择数据与生成数量不变。
 
 重复画面共享按首次出现顺序分配的紧凑编号，例如 A/B/A/C/B 显示 1/2/1/3/2；编号不改变原始帧位置、播放顺序或时间。时间轴点、缩略图与悬浮预览使用同一编号。图集工作区保存切分参数和源预览设置，恢复时重画原图与网格；旧工作区可从已有裁剪数据恢复可推导的参数。
+
+## 私人素材与运行数据
+
+《圣兽之王》等游戏的原画、精灵图、截图、拆帧和动画不属于本项目可分发内容，
+不得提交到 Git、PR、Release 或示例包。个人学习用途不等于取得公开再分发许可。
+请把素材放在项目目录之外；确需临时放入时，只放到已忽略的 `media-assets/`、
+`materials/` 或 `test-assets/`，不要强制添加忽略文件。运行数据、缓存和凭据同样不能提交。
+`.gitignore` 不会移除已经跟踪的文件；提交前检查暂存列表，并运行 `python scripts/check.py`。
+测试仅使用脚本生成的几何素材，公开页面不嵌入游戏素材。

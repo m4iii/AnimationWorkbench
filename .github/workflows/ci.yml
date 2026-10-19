@@ -1,8 +1,15 @@
 name: CI
 on:
   push:
+    branches: [main]
+    tags: ['v*']
   pull_request:
+    branches: [main]
   workflow_dispatch:
+# PR, branch and tag refs have separate groups; a new run replaces stale checks.
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
 permissions:
   contents: read
 jobs:
