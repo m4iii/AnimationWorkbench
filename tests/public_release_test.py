@@ -5,7 +5,8 @@ import re
 import subprocess
 
 ROOT = Path(__file__).resolve().parents[1]
-files = subprocess.check_output(['git', 'ls-files', '--cached', '--others', '--exclude-standard'], cwd=ROOT, text=True).splitlines()
+files = subprocess.check_output(['git', 'ls-files', '-z', '--cached', '--others', '--exclude-standard'], cwd=ROOT, text=True).split('\0')
+files = [name for name in files if name]
 for name in files:
     parts = {p.lower() for p in Path(name).parts}
     private_dirs = {'.runtime', 'runtime', '.codex', '.aws', '__pycache__',
