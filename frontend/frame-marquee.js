@@ -28,7 +28,7 @@
    if(list.hasPointerCapture(g.pointerId))list.releasePointerCapture(g.pointerId);
    if(g.epoch!==editor.epoch)return;
    if(cancelled){const state=FrameSelection.reconcile(editor.frames,g.primary,g.base);editor.selected=state.primaryId;editor.selectionIds=state.selectedIds;editor.renderFrames();return;}
-   if(!g.moved){if(g.cardId)editor.select(g.cardId,{toggle:true,range:g.range});else{editor.renderFrames();}}
+   if(!g.moved){if(g.cardId)editor.select(g.cardId,{toggle:true,range:g.range,visibleOnly:true});else{editor.renderFrames();}}
    else{editor.renderFrames();const frame=editor.frames.find(f=>f.id===editor.selected);if(frame?.kind==='video')editor.setCursor(frame.time);editor.action('motion.select',{frameIds:editor.selectionIds,method:'marquee'});}
    list.focus({preventScroll:true});
   }
@@ -45,10 +45,10 @@
    if(!g.moved){g.moved=true;g.box=document.createElement('div');g.box.className='frame-marquee';g.box.setAttribute('aria-hidden','true');list.append(g.box);raf=requestAnimationFrame(autoScroll);}paint();
   });
   list.addEventListener('pointerup',e=>finish(e));list.addEventListener('pointercancel',e=>finish(e,true));list.addEventListener('lostpointercapture',e=>finish(e,true));
-  list.addEventListener('click',e=>{if(!editor.frameSortMode)return;const card=e.target.closest('[data-frame-id]');if(card)editor.select(card.dataset.frameId,{toggle:true,range:e.shiftKey});});
+  list.addEventListener('click',e=>{if(!editor.frameSortMode)return;const card=e.target.closest('[data-frame-id]');if(card)editor.select(card.dataset.frameId,{toggle:true,range:e.shiftKey,visibleOnly:true});});
   list.addEventListener('keydown',e=>{
    if(e.key==='Escape'&&gesture){e.preventDefault();finish(null,true);return;}
-   if((e.ctrlKey||e.metaKey)&&e.key.toLowerCase()==='a'){e.preventDefault();if(gesture)finish(null);editor.selectionIds=editor.frames.map(f=>f.id);editor.selected=editor.selected||editor.selectionIds[0]||null;editor.renderFrames();}
+   if((e.ctrlKey||e.metaKey)&&e.key.toLowerCase()==='a'){e.preventDefault();if(gesture)finish(null);editor.selectionIds=(editor.visibleFrames?.()||editor.frames).map(f=>f.id);editor.selected=editor.selectionIds.includes(editor.selected)?editor.selected:editor.selectionIds[0]||null;editor.renderFrames();}
    if(['Delete','Backspace'].includes(e.key)&&!e.repeat){e.preventDefault();if(gesture)finish(null);editor.removeSelected();}
   });
   editor.cancelMarquee=()=>finish(null,true);

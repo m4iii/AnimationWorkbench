@@ -5,8 +5,9 @@ root.mountMotionWorkspace=function(editor){
  host.append(layout);const find=s=>layout.querySelector(s);
  find('.studio-imports').append(host.querySelector('.mi-top'));
  find('.studio-source').append(q('source-label'),q('restore'));
+ const sheetOptions=document.createElement('details');sheetOptions.className='studio-sheet-options';const sheetSummary=document.createElement('summary');sheetSummary.textContent='图集切分设置';sheetOptions.append(sheetSummary,q('sheet-section'));find('.studio-source').append(sheetOptions);q('sheet-preview').hidden=true;
  find('.studio-references').append(document.getElementById('reference-panel'));
- const canvas=find('.studio-canvas'),sourceStage=document.createElement('section');sourceStage.className='studio-source-stage';sourceStage.setAttribute('aria-label','原画面');const sourceLabel=document.createElement('div');sourceLabel.className='comparison-label';sourceLabel.textContent='原画面';sourceStage.append(sourceLabel,find('.studio-welcome'),editor.video,q('image-section'),q('sheet-section'));canvas.append(sourceStage,document.getElementById('comparison-original'),document.getElementById('result-panel'),document.getElementById('frame-candidates'));
+ const canvas=find('.studio-canvas'),sourceStage=document.createElement('section');sourceStage.className='studio-source-stage';sourceStage.setAttribute('aria-label','原画面');const sourceLabel=document.createElement('div');sourceLabel.className='comparison-label';sourceLabel.textContent='原画面';sourceStage.append(sourceLabel,find('.studio-welcome'),editor.video,q('image-section'));canvas.append(sourceStage,document.getElementById('comparison-original'),document.getElementById('result-panel'),document.getElementById('frame-candidates'));
  find('.studio-prompt-slot').append(document.getElementById('prompt-panel'));
  find('.studio-timeline').append(q('video-section'));
  find('.studio-frame-strip').append(host.querySelector('.mi-list-head'),q('frames'));
@@ -18,7 +19,7 @@ root.mountMotionWorkspace=function(editor){
   q('selection-count').textContent=selected.length?selected.length+' 帧':'未选帧';q('selection-summary').textContent='选中 '+selected.length+' / 共 '+editor.frames.length;
   for(const action of ['remove-selected'])host.querySelector('[data-mi-action="'+action+'"]').disabled=!selected.length||!!editor.batch;
   host.querySelector('[data-mi-action="select-all"]').disabled=!editor.frames.length;host.querySelector('[data-mi-action="clear-selection"]').disabled=!selected.length;
-  editor.video.hidden=editor.kind!=='video';find('.studio-welcome').hidden=!!editor.sourceName;
+  sheetOptions.hidden=editor.kind!=='sheet';editor.video.hidden=editor.kind!=='video';find('.studio-welcome').hidden=!!editor.sourceName;
   const viewed=editor.isFrameSource?.()?editor.frames.find(f=>f.id===editor.framePreviewId)||frame:frame;q('preview-title').textContent=viewed?'画面预览 · '+editor.frameLabel(viewed):'画面预览';
   if(editor.options.onSelection)editor.options.onSelection(editor);
  };

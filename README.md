@@ -190,3 +190,7 @@ Linux/macOS 本地启动可用 `python3 -m venv .venv`，随后运行
 `materials/` 或 `test-assets/`，不要强制添加忽略文件。运行数据、缓存和凭据同样不能提交。
 `.gitignore` 不会移除已经跟踪的文件；提交前检查暂存列表，并运行 `python scripts/check.py`。
 测试仅使用脚本生成的几何素材，公开页面不嵌入游戏素材。
+
+## Animation metadata
+
+Frame sequences and split sheets display unique action-frame cards while the existing timeline retains every ordered occurrence. Playback and animation JSON controls live in the timeline; FPS controls are temporarily hidden. Import a local animation JSON after loading its images or splitting its sheet to preserve per-frame durations. See [the metadata format](docs/animation-metadata.md). PNG files alone do not establish source timing; without timing metadata the saved default FPS is used.

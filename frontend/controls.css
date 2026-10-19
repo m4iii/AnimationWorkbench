@@ -299,3 +299,13 @@ details:not(#more-menu)>summary:hover{color:#eee7ff;background:#ffffff04}
 .mi-frame-hover-preview{position:fixed;z-index:1000;width:180px;max-width:calc(100vw - 16px);padding:8px;background:var(--ui-panel);color:var(--ui-foreground);border:1px solid #7edbd2;border-radius:6px;box-shadow:0 6px 22px #0008;pointer-events:none}
 .mi-frame-hover-preview img{display:block;width:100%;height:150px;object-fit:contain;object-position:center;background:var(--ui-bg)}
 .mi-frame-hover-preview>div{padding-top:5px;text-align:center;font-size:11px}
+
+/* Frame playback belongs to the existing shared timeline, not the canvas. */
+.timeline-fps{display:none!important}
+.animation-controls{flex-wrap:wrap;gap:8px}
+.animation-controls input{width:72px}
+
+.studio-sheet-options [data-mi=sheet-preview]{display:none!important}
+.studio-sheet-options{margin-top:8px}
+.studio-sheet-options summary{cursor:pointer}
+.studio-sheet-options .mi-grid-fields{flex-wrap:wrap}
