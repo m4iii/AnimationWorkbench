@@ -23,6 +23,15 @@ auth*.json
 *.awb
 workspace-cache.json
 assets/
+media-assets/
+materials/
+test-assets/
+unicorn-overlord/
+runtime/
+cache/
+.cache/
+tmp/
+temp/
 artifacts/
 jobs/
 uploads/
