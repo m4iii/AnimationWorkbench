@@ -49,7 +49,7 @@
    for(const ref of Object.values(refs))if(ref.owned)URL.revokeObjectURL(ref.url);for(const role of Object.keys(refs))delete refs[role];
    for(const list of candidates.values())for(const c of list)URL.revokeObjectURL(c.url);candidates.clear();workspaceBlobs.clear();
    config=normalize(saved.config);editor.savedPlan=null;editor.sources=sourceData.map(x=>MotionInput.cleanSource(x.source));editor.sourceFiles=new Map(sourceData.map(x=>[x.source.id,x.file]));
-   editor.sourceName=motion.sourceName;editor.activeSourceId=state.activeSourceId||editor.sources[0]?.id||null;
+   editor.restoreProjectMetadata?.(motion.sourceProject);editor.sourceManifest=motion.sourceManifest;editor.sheetManifest=motion.sourceManifest?SourceManifest.parse(motion.sourceManifest):null;editor.sourceName=motion.sourceName;editor.activeSourceId=state.activeSourceId||editor.sources[0]?.id||null;
    editor.frames=frameData.map(({frame,blob})=>({...frame,url:editor.own(blob)}));
    editor.serial=Math.max(0,...editor.frames.map(f=>Number(f.id.match(/(\d+)$/)?.[1])||0));editor.sourceSerial=editor.sources.length;
    editor.q('sequence-fps').value=motion.previewFps||12;editor.timelineFps=motion.timelineFps||30;editor.q('timeline-fps').value=editor.timelineFps;editor.fpsInfo={...motion.frameRateInfo,status:motion.frameRateInfo?.status==='saved'?'manual':motion.frameRateInfo?.status||'manual',fps:editor.timelineFps};editor.rateBlocked=false;

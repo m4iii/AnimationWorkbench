@@ -1,0 +1,27 @@
+const assert=require('node:assert/strict');
+const M=require('../frontend/source-manifest.js');
+const make=()=>({frame_count:3,width:20,height:30,columns:2,rows:2,atlas:'atlas.png',durations_ms:[33,66,99],total_duration_ms:198,frames:Array.from({length:3},(_,i)=>({index:i,file:`frames/frame_${i}.png`,duration_ms:[33,66,99][i],frame:{x:i%2*20,y:Math.floor(i/2)*30,w:20,h:30},sourceSize:{w:20,h:30},spriteSourceSize:{x:0,y:0,w:20,h:30},trimmed:false,rotated:false}))});
+const raw=make(),manifest=M.parse(raw);
+assert.equal(manifest.totalDurationMs,198);
+assert.deepEqual(manifest.frames.map(f=>f.durationMs),[33,66,99]);
+assert.deepEqual(manifest.sheetSettings,{cols:2,rows:2,count:3,'offset-x':0,'offset-y':0,'cell-w':20,'cell-h':30,'gap-x':0,'gap-y':0});
+assert.equal(manifest.atlasWidth,40);assert.equal(manifest.atlasHeight,60);
+assert.deepEqual(M.matchImages(manifest,[{name:'frame_2.png'},{name:'frame_0.png'},{name:'frame_1.png'}]).map(e=>e.file.name),['frame_0.png','frame_1.png','frame_2.png']);
+assert.deepEqual(raw,make(),'parse does not mutate source');
+function bad(change,pattern){const v=make();change(v);assert.throws(()=>M.parse(v),pattern);}
+bad(v=>v.frames[0].duration_ms=0,/时长/);bad(v=>v.frames[0].duration_ms=NaN,/时长/);bad(v=>v.frames[0].duration_ms=Infinity,/时长/);bad(v=>v.frames[0].duration_ms='33',/时长/);bad(v=>v.frames[0].duration_ms=null,/时长/);
+bad(v=>v.frames[0].frame.x=-1,/整数/);bad(v=>v.frames[0].frame.x=.5,/整数/);bad(v=>v.frames[0].frame.w=50,/范围/);bad(v=>v.frame_count=4,/帧数/);bad(v=>v.frames[1].index=0,/序号/);
+bad(v=>v.frames[0].rotated=true,/旋转/);bad(v=>v.frames[0].trimmed='true',/裁边/);bad(v=>v.frames[0].spriteSourceSize.x=5,/画布/);
+for(const file of ['https://host/frame.png','../frame.png','/frame.png','a\\frame.png','a//frame.png','a/./frame.png'])bad(v=>v.frames[0].file=file,/相对路径/);
+bad(v=>v.frames[1].file='elsewhere/frame_0.png',/同名/);bad(v=>v.total_duration_ms=199,/总时长/);bad(v=>v.durations_ms=[33],/数组/);bad(v=>v.frames[0].duration_ms=34,/冲突/);
+const untimed=make();delete untimed.durations_ms;delete untimed.total_duration_ms;untimed.frames.forEach(f=>delete f.duration_ms);
+assert.equal(M.parse(untimed).totalDurationMs,null);assert.ok(M.parse(untimed).frames.every(f=>f.durationMs===null));
+untimed.frames[0].duration_ms=33;assert.throws(()=>M.parse(untimed),/时序不完整/);
+const arrayOnly=make();arrayOnly.frames.forEach(f=>delete f.duration_ms);assert.equal(M.parse(arrayOnly).totalDurationMs,198);
+const trimmed=make();trimmed.frames[0].frame={x:0,y:0,w:10,h:20};trimmed.frames[0].spriteSourceSize={x:5,y:10,w:10,h:20};trimmed.frames[0].trimmed=true;assert.equal(M.parse(trimmed).frames[0].spriteSourceSize.y,10);assert.equal(M.parse(trimmed).sheetSettings,null);
+assert.throws(()=>M.matchImages(manifest,[{name:'frame_0.png'}]),/全部/);
+assert.throws(()=>M.matchImages(manifest,[{name:'frame_0.png'},{name:'frame_0.png'},{name:'frame_2.png'}]),/重复/);
+assert.throws(()=>M.matchImages(manifest,[{name:'frame_0.png'},{name:'wrong.png'},{name:'frame_2.png'}]),/缺少/);
+assert.throws(()=>M.parse({frames:[]}),/1–200/);
+assert.throws(()=>M.parse({...make(),frames:Array(201).fill(make().frames[0])}),/1–200/);
+console.log('source manifest: source timing, safe layout, offsets, complete filename matching passed');

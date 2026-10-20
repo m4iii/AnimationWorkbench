@@ -1,0 +1,65 @@
+{
+  "format": "botanical-enemies-animation-manifest",
+  "schemaVersion": "1.0.0",
+  "status": {
+    "frameTiming": "proposed_not_playtested"
+  },
+  "assets": {
+    "example": {
+      "displayName": "两色示例",
+      "sourceImage": {
+        "path": "example-atlas.png",
+        "width": 6,
+        "height": 4,
+        "sha256": "d69ecbcc903e6f1fc225ac2baed3d99ac5c197f1349659ad40e8d8a15edc66f3"
+      },
+      "defaultClip": "idle",
+      "frames": {
+        "A": {
+          "sourceRect": {
+            "x": 0,
+            "y": 0,
+            "w": 3,
+            "h": 4
+          },
+          "sourcePivotPx": {
+            "x": 1.5,
+            "y": 4
+          }
+        },
+        "B": {
+          "sourceRect": {
+            "x": 3,
+            "y": 0,
+            "w": 3,
+            "h": 4
+          },
+          "sourcePivotPx": {
+            "x": 1.5,
+            "y": 4
+          }
+        }
+      },
+      "clips": {
+        "idle": {
+          "displayName": "A-B-A",
+          "loop": true,
+          "sequence": [
+            {
+              "frame": "A",
+              "durationMs": 80
+            },
+            {
+              "frame": "B",
+              "durationMs": 120
+            },
+            {
+              "frame": "A",
+              "durationMs": 80
+            }
+          ]
+        }
+      }
+    }
+  }
+}
