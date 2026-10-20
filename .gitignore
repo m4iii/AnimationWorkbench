@@ -57,3 +57,6 @@ Thumbs.db
 
 # Regenerated test-only video, never published
 tests/fixtures/*.mp4
+
+# Deterministic JSON import demo media are generated locally.
+/examples/json-import/*.png

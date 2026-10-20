@@ -1,13 +1,15 @@
 """Rebuild and run local regression checks. Never invokes a real model."""
 from pathlib import Path
 import subprocess
+import os
 import sys
 
 ROOT = Path(__file__).resolve().parents[1]
 
 def run(*command):
-    subprocess.run(command, cwd=ROOT, check=True)
+    subprocess.run(command, cwd=ROOT, check=True, env={**os.environ, 'WORKBENCH_TEST_PYTHON': sys.executable})
 
+run(sys.executable, 'examples/json-import/generate_examples.py')
 run(sys.executable, 'scripts/generate_sample_media.py')
 run(sys.executable, 'build_frontend.py')
 run(sys.executable, 'tests/check_bundle.py')

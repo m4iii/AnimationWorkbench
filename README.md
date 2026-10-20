@@ -191,6 +191,13 @@ Linux/macOS 本地启动可用 `python3 -m venv .venv`，随后运行
 `.gitignore` 不会移除已经跟踪的文件；提交前检查暂存列表，并运行 `python scripts/check.py`。
 测试仅使用脚本生成的几何素材，公开页面不嵌入游戏素材。
 
-## Animation metadata
+### 来源帧时序（帧序列与规则图集）
 
-Frame sequences and split sheets display unique action-frame cards while the existing timeline retains every ordered occurrence. Playback and animation JSON controls live in the timeline; FPS controls are temporarily hidden. Import a local animation JSON after loading its images or splitting its sheet to preserve per-frame durations. See [the metadata format](docs/animation-metadata.md). PNG files alone do not establish source timing; without timing metadata the saved default FPS is used.
+导入图片时可同时选择原动画提取包中的 `manifest.json`。帧序列须选择 manifest 列出的全部 PNG；图集须选择对应 atlas PNG 与 manifest。帧序列按来源记录顺序排列；图集自动填入提取所得网格，点击切分后使用每帧原始毫秒时长。来源时序显示在时间轴，无单独 JSON 管理或时长编辑面板。
+
+动作帧卡片仅显示不同像素画面；时间轴保留每一个原始引用（例如 A/B/A）、顺序和时长。播放/暂停位于时间轴。刷新后由现有工作区缓存恢复图片、网格、原时序；图集尚未切分时也保留来源记录。
+
+单独 PNG 没有动画时序，界面明确标为默认 12 fps 测试时序，不将其宣称为来源速度。当前仅接入提取包的完整帧、规则网格记录；裁边、偏移、旋转或不规则图集会明确拒绝，不自动猜测切图。不新增通用图集格式转换器或完整动画导出功能。
+
+
+JSON 格式、独立“导入 JSON”流程、字段规范、限制和可导入示例请见 [动画 JSON 格式规范](docs/animation-json-format.md)。

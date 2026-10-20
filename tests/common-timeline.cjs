@@ -29,9 +29,9 @@ for(const kind of ['sequence','sheet']){
 // Playback traverses every original static frame, including duplicate images,
 // without changing generation selection or rebuilding the whole app per tick.
 for(const kind of ['sequence','sheet']){
- const {ed,fields}=fixture(kind);let callback,previewRenders=0;const oldSet=global.setTimeout,oldClear=global.clearTimeout;
- ed.options={onSourcePreview(){previewRenders++}};global.setTimeout=fn=>{callback=fn;return 1};global.clearTimeout=()=>{};
- try{ed.playSequence();callback();assert.equal(ed.framePreviewId,'b');callback();assert.equal(ed.framePreviewId,'a2');assert.equal(ed.cursor,2/12);callback();assert.equal(ed.framePreviewId,'a');assert.deepEqual(ed.selectionIds,['a','b']);assert.equal(previewRenders,0);ed.stopSequence();}finally{global.setTimeout=oldSet;global.clearTimeout=oldClear;}
+ const {ed,fields}=fixture(kind);let callback,previewRenders=0,clock=0;const oldPerformance=global.performance;global.performance={now:()=>clock};const oldSet=global.setInterval,oldClear=global.clearInterval;
+ ed.options={onSourcePreview(){previewRenders++}};global.setInterval=fn=>{callback=fn;return 1};global.clearInterval=()=>{};
+ try{ed.playSequence();clock=1000/12;callback();assert.equal(ed.framePreviewId,'b');clock=2000/12;callback();assert.equal(ed.framePreviewId,'a2');assert.equal(ed.cursor,2/12);clock=250;callback();assert.equal(ed.framePreviewId,'a');assert.deepEqual(ed.selectionIds,['a','b']);assert.equal(previewRenders,0);ed.stopSequence();}finally{global.performance=oldPerformance;global.setInterval=oldSet;global.clearInterval=oldClear;}
 }
 const app=require('node:fs').readFileSync(require('node:path').join(__dirname,'../frontend/unified-app.js'),'utf8');assert.match(app,/editor.render\(\);editor.setCursor\(Number\(state.cursor\)\|\|0\)/,'all source adapters restore the saved playhead');
 const layout=require('node:fs').readFileSync(require('node:path').join(__dirname,'../frontend/editor-layout.js'),'utf8');assert.match(layout,/const viewed=editor.isFrameSource\?\.\(\)\?editor.frames.find\(f=>f.id===editor.framePreviewId\)\|\|frame:frame/,'inspector label follows independent preview frame');
